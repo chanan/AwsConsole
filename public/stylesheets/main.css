@@ -1,0 +1,9 @@
+body {
+	padding-top: 100px;
+}
+td:nth-child(1) { 
+	white-space:nowrap; 
+}
+th:nth-child(1) { 
+	white-space:nowrap; 
+}

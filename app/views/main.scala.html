@@ -1,0 +1,41 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@title</title>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("united/bootstrap.min.css"))'>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("default/bootstrap-responsive.min.css"))'>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("css/font-awesome.min.css"))'>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    </head>
+    <body class="preview">
+ 		<div class="navbar navbar-fixed-top">
+   			<div class="navbar-inner">
+     			<div class="container">
+       				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				         <span class="icon-bar"></span>
+				         <span class="icon-bar"></span>
+				         <span class="icon-bar"></span>
+       				</a>
+       				<a class="brand" href="/">AWS Console</a>
+       				<ul class="nav">
+				      	<li><a href="@routes.Application.instances()">Instances</a></li>
+				      	<li><a href="@routes.Application.createInstance()">Create Instance</a></li>
+				      	<li><a href="@routes.Users.index()">Users</a></li>
+				    </ul>
+				    <ul class="nav pull-right">
+				    	<li><a href="@securesocial.core.providers.utils.RoutesHelper.logout()">Logout</a></li>
+				    </ul>				    
+     			</div>
+   			</div>
+ 		</div>
+        @content
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("js/bootstrap.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("js/bootswatch.js"))'></script>
+        <script type='text/javascript' src='@routes.Assets.at("javascripts/app.js")'></script>
+    </body>
+</html>

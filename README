@@ -1,0 +1,36 @@
+AWS Console
+===========
+
+The console does:
+
+1. Shows EC2 instances
+2. Allows to start and stop instances
+3. Allows to mark an instances as "power save" - This will run the instance M-F 8am-6pm and turn them off in off hours
+4. Allows to create a new instance based on a saved AMI image
+
+The application does its work inside Akka Actors (both typed and untyped actors). For the typed actor methods that return a value, a Future is returned. In the controller actions they are converted into Play promises of results.
+
+The application uses SecureSocial userpass service for authentication and overrides some of the templates that secure social uses.
+
+Configuration:
+==============
+
+Provide the following keys in your configuration:
+
+smtp {
+    host=
+    port=
+    ssl=
+    user=
+    password=
+    from=
+}
+
+aws.accesskey=
+aws.secretkey=
+aws.owner=
+
+application.firstemail=
+application.firstfirstname=
+application.firstlastname=
+application.firstpassword=
