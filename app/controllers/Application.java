@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.javatuples.Pair;
-
 import models.CreateInstance;
 import models.InstanceViewModel;
 import models.LocalInstance;
@@ -17,6 +15,7 @@ import play.libs.Akka;
 import play.libs.F;
 import play.libs.F.Function;
 import play.libs.F.Promise;
+import play.libs.F.Tuple;
 import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.java.SecureSocial;
@@ -96,9 +95,9 @@ public class Application extends Controller {
 					@Override
 					public Promise<Result> apply(final List<Instance> instances) throws Throwable {
 						return Akka.asPromise(localStore.listLocalInstances(instances)).map(
-							new Function<List<Pair<Instance, LocalInstance>>, Result>() {
+							new Function<List<Tuple<Instance, LocalInstance>>, Result>() {
 								@Override
-								public Result apply(final List<Pair<Instance, LocalInstance>> pairs) throws Throwable {
+								public Result apply(final List<Tuple<Instance, LocalInstance>> pairs) throws Throwable {
 									final List<InstanceViewModel> viewModels = getViewModels(pairs);
 									return ok(views.html.instances.render(viewModels));
 								}	
@@ -110,10 +109,10 @@ public class Application extends Controller {
 		);
     }
     
-	private static List<InstanceViewModel> getViewModels(List<Pair<Instance, LocalInstance>> pairs) {
+	private static List<InstanceViewModel> getViewModels(List<Tuple<Instance, LocalInstance>> pairs) {
 		final List<InstanceViewModel> list = new ArrayList<InstanceViewModel>();
-		for(final Pair<Instance, LocalInstance> pair : pairs) {
-			list.add(new InstanceViewModel(pair.getValue0(), pair.getValue1()));
+		for(final Tuple<Instance, LocalInstance> pair : pairs) {
+			list.add(new InstanceViewModel(pair._1, pair._2));
 		}
 		return list;
 	}
