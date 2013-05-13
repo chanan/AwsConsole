@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.javatuples.Pair;
+
 import models.CreateInstance;
 import models.InstanceViewModel;
 import models.LocalInstance;
@@ -94,10 +96,10 @@ public class Application extends Controller {
 					@Override
 					public Promise<Result> apply(final List<Instance> instances) throws Throwable {
 						return Akka.asPromise(localStore.listLocalInstances(instances)).map(
-							new Function<Map<String, LocalInstance>, Result>() {
+							new Function<List<Pair<Instance, LocalInstance>>, Result>() {
 								@Override
-								public Result apply(final Map<String, LocalInstance> localInstances) throws Throwable {
-									final List<InstanceViewModel> viewModels = getViewModels(instances, localInstances);
+								public Result apply(final List<Pair<Instance, LocalInstance>> pairs) throws Throwable {
+									final List<InstanceViewModel> viewModels = getViewModels(pairs);
 									return ok(views.html.instances.render(viewModels));
 								}	
 							}
@@ -108,11 +110,10 @@ public class Application extends Controller {
 		);
     }
     
-	private static List<InstanceViewModel> getViewModels(List<Instance> instances, Map<String, LocalInstance> localInstances) {
+	private static List<InstanceViewModel> getViewModels(List<Pair<Instance, LocalInstance>> pairs) {
 		final List<InstanceViewModel> list = new ArrayList<InstanceViewModel>();
-		for(final Instance instance : instances) {
-			final LocalInstance localInstance = localInstances.get(instance.getInstanceId());
-			list.add(new InstanceViewModel(instance, localInstance));
+		for(final Pair<Instance, LocalInstance> pair : pairs) {
+			list.add(new InstanceViewModel(pair.getValue0(), pair.getValue1()));
 		}
 		return list;
 	}

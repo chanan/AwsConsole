@@ -1,9 +1,12 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+
+import org.javatuples.Pair;
 
 import models.LocalInstance;
 import play.libs.Akka;
@@ -15,11 +18,11 @@ import com.amazonaws.services.ec2.model.Instance;
 public class LocalStoreImpl implements LocalStore {
 
 	@Override
-	public Future<Map<String, LocalInstance>> listLocalInstances(final List<Instance> instances) {
-		return Futures.future(new Callable<Map<String, LocalInstance>>() {
+	public Future<List<Pair<Instance, LocalInstance>>> listLocalInstances(final List<Instance> instances) {
+		return Futures.future(new Callable<List<Pair<Instance, LocalInstance>>>() {
 			@Override
-			public Map<String, LocalInstance> call() throws Exception {
-				final Map<String, LocalInstance> returnMap = new HashMap<String, LocalInstance>();
+			public List<Pair<Instance, LocalInstance>> call() throws Exception {
+				final List<Pair<Instance, LocalInstance>> returnList = new ArrayList<Pair<Instance, LocalInstance>>();
 				final List<LocalInstance> dbList = LocalInstance.find.all();
 				final Map<String, LocalInstance> dbMap = createLocalInstanceMap(dbList);
 				final Map<String, Instance> instanceMap = createInstanceMap(instances);
@@ -27,17 +30,18 @@ public class LocalStoreImpl implements LocalStore {
 					if(!dbMap.containsKey(instance.getInstanceId())) {
 						final LocalInstance localInstance = new LocalInstance(instance.getInstanceId());
 						localInstance.save();
-						returnMap.put(localInstance.instanceId, localInstance);
+						returnList.add(new Pair<Instance, LocalInstance>(instance, localInstance));
 					}
 				}
 				for(final LocalInstance localInstance : dbList) {
 					if(!instanceMap.containsKey(localInstance.instanceId)) {
 						localInstance.delete();
 					} else {
-						returnMap.put(localInstance.instanceId, localInstance);
+						final Instance instance = instanceMap.get(localInstance.instanceId);
+						returnList.add(new Pair<Instance, LocalInstance>(instance, localInstance));
 					}
 				}
-				return returnMap;
+				return returnList;
 			}
 			
 		}, Akka.system().dispatcher());

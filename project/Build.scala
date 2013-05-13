@@ -14,8 +14,9 @@ object ApplicationBuild extends Build {
     "org.webjars" % "bootswatch" % "2.3.1",
     "org.webjars" % "font-awesome" % "3.0.2",
     "org.webjars" % "bootstrap-timepicker" % "0.2.1",
-    "securesocial" %% "securesocial" % "master-SNAPSHOT",
+    "securesocial" % "securesocial" % "master-SNAPSHOT",
     "mysql" % "mysql-connector-java" % "5.1.18",
+    "org.javatuples" % "javatuples" % "1.2", 
     javaCore,
     javaJdbc,
     javaEbean
