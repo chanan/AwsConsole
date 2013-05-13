@@ -14,6 +14,7 @@ import play.data.Form;
 import play.libs.Akka;
 import play.libs.F;
 import play.libs.F.Function;
+import play.libs.F.Promise;
 import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.java.SecureSocial;
@@ -88,11 +89,11 @@ public class Application extends Controller {
 	@SecureSocial.SecuredAction
     public static Result instances() {
 		return async(
-			Akka.asPromise(amazon.listInstances()).map(
-				new Function<List<Instance>, Result> () {
+			Akka.asPromise(amazon.listInstances()).flatMap(
+				new Function<List<Instance>, Promise<Result>> () {
 					@Override
-					public Result apply(final List<Instance> instances) throws Throwable {
-						return async(Akka.asPromise(localStore.listLocalInstances(instances)).map(
+					public Promise<Result> apply(final List<Instance> instances) throws Throwable {
+						return Akka.asPromise(localStore.listLocalInstances(instances)).map(
 							new Function<Map<String, LocalInstance>, Result>() {
 								@Override
 								public Result apply(final Map<String, LocalInstance> localInstances) throws Throwable {
@@ -100,7 +101,7 @@ public class Application extends Controller {
 									return ok(views.html.instances.render(viewModels));
 								}	
 							}
-						));
+						);
 					}
 				}
 			)
