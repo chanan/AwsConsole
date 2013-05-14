@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.javatuples.Pair;
-
 import models.CreateInstance;
 import models.InstanceViewModel;
 import models.LocalInstance;
@@ -17,6 +15,7 @@ import play.libs.Akka;
 import play.libs.F;
 import play.libs.F.Function;
 import play.libs.F.Promise;
+import play.libs.F.Tuple;
 import play.mvc.Controller;
 import play.mvc.Result;
 import securesocial.core.java.SecureSocial;
@@ -91,32 +90,43 @@ public class Application extends Controller {
 	@SecureSocial.SecuredAction
     public static Result instances() {
 		return async(
-			Akka.asPromise(amazon.listInstances()).flatMap(
-				new Function<List<Instance>, Promise<Result>> () {
-					@Override
-					public Promise<Result> apply(final List<Instance> instances) throws Throwable {
-						return Akka.asPromise(localStore.listLocalInstances(instances)).map(
-							new Function<List<Pair<Instance, LocalInstance>>, Result>() {
-								@Override
-								public Result apply(final List<Pair<Instance, LocalInstance>> pairs) throws Throwable {
-									final List<InstanceViewModel> viewModels = getViewModels(pairs);
-									return ok(views.html.instances.render(viewModels));
-								}	
-							}
-						);
-					}
-				}
-			)
+			Akka.asPromise(amazon.listInstances())
+			    .flatMap(withLocalInstances())
+			    .map(toViewModels())
+			    .map(getResult())
 		);
     }
-    
-	private static List<InstanceViewModel> getViewModels(List<Pair<Instance, LocalInstance>> pairs) {
-		final List<InstanceViewModel> list = new ArrayList<InstanceViewModel>();
-		for(final Pair<Instance, LocalInstance> pair : pairs) {
-			list.add(new InstanceViewModel(pair.getValue0(), pair.getValue1()));
-		}
-		return list;
-	}
+
+    private static Function<List<Instance>, Promise<List<Tuple<Instance, LocalInstance>>>> withLocalInstances() {
+        return new Function<List<Instance>, Promise<List<Tuple<Instance, LocalInstance>>>> () {
+            @Override
+            public Promise<List<Tuple<Instance, LocalInstance>>> apply(final List<Instance> instances) throws Throwable {
+                return Akka.asPromise(localStore.listLocalInstances(instances));
+            }
+        };
+    }
+
+    private static Function<List<Tuple<Instance, LocalInstance>>, List<InstanceViewModel>> toViewModels() {
+        return new Function<List<Tuple<Instance, LocalInstance>>, List<InstanceViewModel>>() {
+            @Override
+            public List<InstanceViewModel> apply(final List<Tuple<Instance, LocalInstance>> pairs) throws Throwable {
+                final List<InstanceViewModel> list = new ArrayList<InstanceViewModel>();
+                for(final Tuple<Instance, LocalInstance> pair : pairs) {
+                    list.add(new InstanceViewModel(pair._1, pair._2));
+                }
+                return list;
+            }
+        };
+    }
+
+    private static Function<List<InstanceViewModel>, Result> getResult() {
+        return new Function<List<InstanceViewModel>, Result>() {
+            @Override
+            public Result apply(List<InstanceViewModel> viewModels) throws Throwable {
+                return ok(views.html.instances.render(viewModels));
+            }
+        };
+    }
 
 	@SecureSocial.SecuredAction
     public static Result startInstance() {

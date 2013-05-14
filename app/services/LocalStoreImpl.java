@@ -1,12 +1,12 @@
 package services;
 
+import static play.libs.F.Tuple;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
-import org.javatuples.Pair;
 
 import models.LocalInstance;
 import play.libs.Akka;
@@ -18,11 +18,11 @@ import com.amazonaws.services.ec2.model.Instance;
 public class LocalStoreImpl implements LocalStore {
 
 	@Override
-	public Future<List<Pair<Instance, LocalInstance>>> listLocalInstances(final List<Instance> instances) {
-		return Futures.future(new Callable<List<Pair<Instance, LocalInstance>>>() {
+	public Future<List<Tuple<Instance, LocalInstance>>> listLocalInstances(final List<Instance> instances) {
+		return Futures.future(new Callable<List<Tuple<Instance, LocalInstance>>>() {
 			@Override
-			public List<Pair<Instance, LocalInstance>> call() throws Exception {
-				final List<Pair<Instance, LocalInstance>> returnList = new ArrayList<Pair<Instance, LocalInstance>>();
+			public List<Tuple<Instance, LocalInstance>> call() throws Exception {
+				final List<Tuple<Instance, LocalInstance>> returnList = new ArrayList<Tuple<Instance, LocalInstance>>();
 				final List<LocalInstance> dbList = LocalInstance.find.all();
 				final Map<String, LocalInstance> dbMap = createLocalInstanceMap(dbList);
 				final Map<String, Instance> instanceMap = createInstanceMap(instances);
@@ -30,7 +30,7 @@ public class LocalStoreImpl implements LocalStore {
 					if(!dbMap.containsKey(instance.getInstanceId())) {
 						final LocalInstance localInstance = new LocalInstance(instance.getInstanceId());
 						localInstance.save();
-						returnList.add(new Pair<Instance, LocalInstance>(instance, localInstance));
+						returnList.add(Tuple(instance, localInstance));
 					}
 				}
 				for(final LocalInstance localInstance : dbList) {
@@ -38,7 +38,7 @@ public class LocalStoreImpl implements LocalStore {
 						localInstance.delete();
 					} else {
 						final Instance instance = instanceMap.get(localInstance.instanceId);
-						returnList.add(new Pair<Instance, LocalInstance>(instance, localInstance));
+						returnList.add(Tuple(instance, localInstance));
 					}
 				}
 				return returnList;
