@@ -1,6 +1,7 @@
 package services;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import models.LocalInstance;
 
@@ -11,6 +12,7 @@ import org.joda.time.DateTimeZone;
 import com.typesafe.config.ConfigFactory;
 
 import play.libs.Akka;
+import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.TypedActor;
@@ -19,7 +21,18 @@ import akka.actor.UntypedActor;
 
 public class PowerManager extends UntypedActor {
 	private final String timezone = ConfigFactory.load().getString("application.timezone");
+	private final static ActorRef instance = Akka.system().actorOf(new Props(PowerManager.class));
 
+	public static void init() {
+		Akka.system().scheduler().schedule(
+			Duration.create(30, TimeUnit.SECONDS),
+			Duration.create(1, TimeUnit.MINUTES),
+			instance, 
+			"tick",
+			Akka.system().dispatcher()
+		);
+	}
+	
 	@Override
 	public void onReceive(Object arg0) throws Exception {
 		DateTimeZone zone = DateTimeZone.forID(timezone);

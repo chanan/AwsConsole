@@ -1,11 +1,18 @@
 package services;
 
+import java.util.concurrent.TimeUnit;
+
+import play.libs.Akka;
+
 import com.typesafe.config.ConfigFactory;
 
 import models.LocalUser;
 import scala.Option;
+import scala.concurrent.duration.Duration;
 import securesocial.core.Registry;
 import securesocial.core.providers.utils.PasswordHasher;
+import akka.actor.ActorRef;
+import akka.actor.Props;
 import akka.actor.UntypedActor;
 
 public class Setup extends UntypedActor {
@@ -13,7 +20,19 @@ public class Setup extends UntypedActor {
 	private final String firstname = ConfigFactory.load().getString("application.firstfirstname");
 	private final String lastname = ConfigFactory.load().getString("application.firstlastname");
 	private final String password = ConfigFactory.load().getString("application.firstpassword");
-
+	private final static ActorRef instance = Akka.system().actorOf(new Props(Setup.class));
+	
+	
+	public static void init() {
+		Akka.system().scheduler().scheduleOnce(
+			Duration.create(1, TimeUnit.SECONDS),
+			new Runnable() {
+			    public void run() {
+			    	instance.tell("tick", null);
+			    }
+			}, Akka.system().dispatcher());
+	}
+	
 	@Override
 	public void onReceive(Object arg0) throws Exception {
 		int size = LocalUser.find.all().size();
