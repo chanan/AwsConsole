@@ -2,40 +2,54 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                           controllers.Application.index()
-GET		/instances					controllers.Application.instances()
-GET		/createInstance				controllers.Application.createInstance()
-POST	/startInstance				controllers.Application.startInstance()
-POST	/stopInstance				controllers.Application.stopInstance()
-POST	/changePowerSaveMode 		controllers.Application.changePowerSaveMode()
-GET		/healthCheck 				controllers.Application.healthCheck()
-POST	/doCreateInstance			controllers.Application.doCreateInstance()
+# Application
+GET    /                                            controllers.Application.index()
+GET    /instances                                   controllers.Application.instances()
+GET    /createInstance                              controllers.Application.createInstance()
+POST   /startInstance                               controllers.Application.startInstance()
+POST   /stopInstance                                controllers.Application.stopInstance()
+POST   /changePowerSaveMode                         controllers.Application.changePowerSaveMode()
+GET    /healthCheck                                 controllers.Application.healthCheck()
+POST   /doCreateInstance                            controllers.Application.doCreateInstance()
+GET	   /test									    controllers.Application.test()
 
 # Users
-GET		/users						controllers.Users.index()
+GET    /users                                       controllers.Users.index()
+
+# Mobile
+
+GET    /mobile/                                     controllers.Mobile.index()
+
+# Json API
+
+GET    /api/instances                               controllers.Api.instances()
+GET    /api/instances/:instanceId                   controllers.Api.instance(instanceId)
+POST   /api/instances/:instanceId/start             controllers.Api.startInstance(instanceId)
+POST   /api/instances/:instanceId/stop              controllers.Api.stopInstance(instanceId)
+POST   /api/instances/:instanceId/changePowerSave   controllers.Api.changePowerSave(instanceId)
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /webjars/*file              controllers.WebJarAssets.at(file)
+GET    /lib/require.js              				controllers.WebJarAssets.requirejs
+GET    /webjars/*file                               controllers.WebJarAssets.at(file)
+GET    /assets/*file                                controllers.Assets.at(path="/public", file)
 
 # Login page
-GET     /login                      securesocial.controllers.LoginPage.login
-GET     /logout                     securesocial.controllers.LoginPage.logout
+GET    /login                                       securesocial.controllers.LoginPage.login
+GET    /logout                                      securesocial.controllers.LoginPage.logout
 
 # User Registration and password handling 
-GET     /signup                     securesocial.controllers.Registration.startSignUp
-POST    /signup                     securesocial.controllers.Registration.handleStartSignUp
-GET     /signup/:token              securesocial.controllers.Registration.signUp(token)
-POST    /signup/:token              securesocial.controllers.Registration.handleSignUp(token)
-GET     /reset                      securesocial.controllers.Registration.startResetPassword
-POST    /reset                      securesocial.controllers.Registration.handleStartResetPassword
-GET     /reset/:token               securesocial.controllers.Registration.resetPassword(token)
-POST    /reset/:token               securesocial.controllers.Registration.handleResetPassword(token)
-GET     /password                   securesocial.controllers.PasswordChange.page
-POST    /password                   securesocial.controllers.PasswordChange.handlePasswordChange
+GET    /signup                                      securesocial.controllers.Registration.startSignUp
+POST   /signup                                      securesocial.controllers.Registration.handleStartSignUp
+GET    /signup/:token                               securesocial.controllers.Registration.signUp(token)
+POST   /signup/:token                               securesocial.controllers.Registration.handleSignUp(token)
+GET    /reset                                       securesocial.controllers.Registration.startResetPassword
+POST   /reset                                       securesocial.controllers.Registration.handleStartResetPassword
+GET    /reset/:token                                securesocial.controllers.Registration.resetPassword(token)
+POST   /reset/:token                                securesocial.controllers.Registration.handleResetPassword(token)
+GET    /password                                    securesocial.controllers.PasswordChange.page
+POST   /password                                    securesocial.controllers.PasswordChange.handlePasswordChange
 
 # Providers entry points
-GET     /authenticate/:provider     securesocial.controllers.ProviderController.authenticate(provider)
-POST    /authenticate/:provider     securesocial.controllers.ProviderController.authenticateByPost(provider)
-GET     /not-authorized             securesocial.controllers.ProviderController.notAuthorized
+GET    /authenticate/:provider                      securesocial.controllers.ProviderController.authenticate(provider)
+POST   /authenticate/:provider                      securesocial.controllers.ProviderController.authenticateByPost(provider)
+GET    /not-authorized                              securesocial.controllers.ProviderController.notAuthorized

@@ -42,8 +42,15 @@ public class AmazonImpl implements Amazon {
 	
 	@Override
 	public Future<List<Instance>> listInstances() {
+		return listInstances(null);
+	}
+	
+	@Override
+	public Future<List<Instance>> listInstances(String instanceId) {
 		final Promise<List<Instance>> promise = Futures.promise();
-		client.describeInstancesAsync(new DescribeInstancesRequest(), new AsyncHandler<DescribeInstancesRequest,DescribeInstancesResult>() {
+		DescribeInstancesRequest request = new DescribeInstancesRequest();
+		if(instanceId != null) request.withInstanceIds(instanceId);
+		client.describeInstancesAsync(request, new AsyncHandler<DescribeInstancesRequest,DescribeInstancesResult>() {
 			@Override
 			public void onError(Exception ex) {
 				promise.failure(ex);
@@ -164,5 +171,4 @@ public class AmazonImpl implements Amazon {
 			localInstance.save();
 		}
 	}
-
 }

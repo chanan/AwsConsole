@@ -33,7 +33,7 @@ public class Application extends Controller {
 	private final static Amazon amazon = TypedActor.get(Akka.system()).typedActorOf(new TypedProps<AmazonImpl>(Amazon.class, AmazonImpl.class));
 	private final static LocalStore localStore = TypedActor.get(Akka.system()).typedActorOf(new TypedProps<LocalStoreImpl>(LocalStore.class, LocalStoreImpl.class));
 	
-	@SecureSocial.SecuredAction
+	//@SecureSocial.SecuredAction
 	public static Result index() {
 		return redirect(routes.Application.instances());
 	}
@@ -87,7 +87,7 @@ public class Application extends Controller {
 		}
 	}
 	
-	@SecureSocial.SecuredAction
+	//@SecureSocial.SecuredAction
     public static Result instances() {
 		return async(
 			Akka.asPromise(amazon.listInstances())
@@ -155,6 +155,10 @@ public class Application extends Controller {
 	
 	public static Result healthCheck() {
 		return ok("I am healthy!");
+	}
+	
+	public static Result test() {
+		return ok(views.html.test.render());
 	}
   
 }

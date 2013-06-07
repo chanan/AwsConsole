@@ -48,10 +48,34 @@ public class LocalStoreImpl implements LocalStore {
 	}
 	
 	@Override
+	public Future<List<Tuple<Instance, LocalInstance>>> listLocalInstance(final List<Instance> instances) {
+		return Futures.future(new Callable<List<Tuple<Instance, LocalInstance>>>() {
+			@Override
+			public List<Tuple<Instance, LocalInstance>> call() throws Exception {
+				final List<Tuple<Instance, LocalInstance>> returnList = new ArrayList<Tuple<Instance, LocalInstance>>();
+				final Instance instance = instances.get(0);
+				final LocalInstance localInstance = LocalInstance.find.byId(instance.getInstanceId());
+				returnList.add(Tuple(instance, localInstance));
+				return returnList;
+			}
+			
+		}, Akka.system().dispatcher());
+	}
+	
+	@Override
 	public void changePowerSaveState(String instanceId, boolean powerSave) {
 		LocalInstance localInstance = LocalInstance.find.byId(instanceId);
 		if(localInstance != null) {
 			localInstance.powerSave = powerSave;
+			localInstance.update();
+		}
+	}
+	
+	@Override
+	public void changePowerSaveState(String instanceId) {
+		LocalInstance localInstance = LocalInstance.find.byId(instanceId);
+		if(localInstance != null) {
+			localInstance.powerSave = !localInstance.powerSave;
 			localInstance.update();
 		}
 	}
