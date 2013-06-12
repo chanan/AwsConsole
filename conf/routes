@@ -11,14 +11,9 @@ POST   /stopInstance                                controllers.Application.stop
 POST   /changePowerSaveMode                         controllers.Application.changePowerSaveMode()
 GET    /healthCheck                                 controllers.Application.healthCheck()
 POST   /doCreateInstance                            controllers.Application.doCreateInstance()
-GET	   /test									    controllers.Application.test()
 
 # Users
 GET    /users                                       controllers.Users.index()
-
-# Mobile
-
-GET    /mobile/                                     controllers.Mobile.index()
 
 # Json API
 

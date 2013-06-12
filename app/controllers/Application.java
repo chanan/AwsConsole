@@ -156,9 +156,4 @@ public class Application extends Controller {
 	public static Result healthCheck() {
 		return ok("I am healthy!");
 	}
-	
-	public static Result test() {
-		return ok(views.html.test.render());
-	}
-  
 }
