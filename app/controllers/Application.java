@@ -35,7 +35,8 @@ public class Application extends Controller {
 	
 	//@SecureSocial.SecuredAction
 	public static Result index() {
-		return redirect(routes.Application.instances());
+		//return redirect(routes.Application.instances());
+		return ok(views.html.index.render());
 	}
 	
 	@SecureSocial.SecuredAction
@@ -83,57 +84,16 @@ public class Application extends Controller {
 			);
 		} else {
 			amazon.createInstance(createInstanceForm.get());
-			return redirect(routes.Application.instances()); 
+			return redirect(routes.Application.index()); 
 		}
 	}
 	
-	//@SecureSocial.SecuredAction
-    public static Result instances() {
-		return async(
-			Akka.asPromise(amazon.listInstances())
-			    .flatMap(withLocalInstances())
-			    .map(toViewModels())
-			    .map(getResult())
-		);
-    }
-
-    private static Function<List<Instance>, Promise<List<Tuple<Instance, LocalInstance>>>> withLocalInstances() {
-        return new Function<List<Instance>, Promise<List<Tuple<Instance, LocalInstance>>>> () {
-            @Override
-            public Promise<List<Tuple<Instance, LocalInstance>>> apply(final List<Instance> instances) throws Throwable {
-                return Akka.asPromise(localStore.listLocalInstances(instances));
-            }
-        };
-    }
-
-    private static Function<List<Tuple<Instance, LocalInstance>>, List<InstanceViewModel>> toViewModels() {
-        return new Function<List<Tuple<Instance, LocalInstance>>, List<InstanceViewModel>>() {
-            @Override
-            public List<InstanceViewModel> apply(final List<Tuple<Instance, LocalInstance>> pairs) throws Throwable {
-                final List<InstanceViewModel> list = new ArrayList<InstanceViewModel>();
-                for(final Tuple<Instance, LocalInstance> pair : pairs) {
-                    list.add(new InstanceViewModel(pair._1, pair._2));
-                }
-                return list;
-            }
-        };
-    }
-
-    private static Function<List<InstanceViewModel>, Result> getResult() {
-        return new Function<List<InstanceViewModel>, Result>() {
-            @Override
-            public Result apply(List<InstanceViewModel> viewModels) throws Throwable {
-                return ok(views.html.instances.render(viewModels));
-            }
-        };
-    }
-
 	@SecureSocial.SecuredAction
     public static Result startInstance() {
     	DynamicForm requestData = new DynamicForm().bindFromRequest();
     	String instanceId = requestData.get("instanceId");
     	amazon.startInstance(instanceId);
-    	return redirect(routes.Application.instances());
+    	return redirect(routes.Application.index());
     }
     
 	@SecureSocial.SecuredAction
@@ -141,7 +101,7 @@ public class Application extends Controller {
     	DynamicForm requestData = new DynamicForm().bindFromRequest();
     	String instanceId = requestData.get("instanceId");
     	amazon.stopInstance(instanceId);
-    	return redirect(routes.Application.instances());
+    	return redirect(routes.Application.index());
     }
     
 	@SecureSocial.SecuredAction
@@ -150,7 +110,7 @@ public class Application extends Controller {
     	String instanceId = requestData.get("instanceId");
     	boolean powerSave = requestData.get("powerSave") != null;
     	localStore.changePowerSaveState(instanceId, powerSave);
-    	return redirect(routes.Application.instances());
+    	return redirect(routes.Application.index());
     }
 	
 	public static Result healthCheck() {

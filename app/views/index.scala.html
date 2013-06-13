@@ -1,10 +1,9 @@
-@(title: String)(content: Html)
 <!DOCTYPE html>
 <html>
     <head>
     	<meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>@title</title>
+        <title>AWS Console</title>
         <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootswatch/2.3.1/united/bootstrap.min.css"))'>
         <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootswatch/2.3.1/default/bootstrap-responsive.min.css"))'>
         <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome/3.1.1/css/font-awesome.min.css"))'>
@@ -28,7 +27,33 @@
      			</div>
    			</div>
  		</div>
-        @content
+        <div class="container" data-bind="module: { name: $root.currentModule }"></div>
+	 	<div id="loginModal" class="modal hide fade" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-header">
+		 		<h3>Login</h3>
+			</div>
+			<div class="modal-body">
+		 		<form id="loginForm" action="/authenticate/userpass" class="form-horizontal" method="POST">
+		        	<fieldset>
+		            	<div class="control-group" id="username_field">
+		 					<label class="control-label" for="username">Email</label>
+		 					<div class="controls">
+		     					<input type="text" id="username" name="username" class="input-xlarge" />
+							</div>
+						</div>
+						<div class="control-group" id="password_field">
+		 					<label class="control-label" for="password">Password</label>
+		 					<div class="controls">
+		       					<input type="password" id="password" name="password" class="input-xlarge" />
+							</div>
+						</div>
+		         	</fieldset>
+		         </form>
+			</div>
+			<div class="modal-footer">
+		 		<button class="btn btn-primary" data-bind="click: doLogin">Login</button>
+			</div>
+		</div>
         <pre data-bind="text: ko.toJSON($data, null, 2)"></pre>
         <script data-main="/assets/main.js" type='text/javascript' src='@routes.WebJarAssets.requirejs'></script>
     </body>

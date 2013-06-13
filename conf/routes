@@ -4,7 +4,6 @@
 
 # Application
 GET    /                                            controllers.Application.index()
-GET    /instances                                   controllers.Application.instances()
 GET    /createInstance                              controllers.Application.createInstance()
 POST   /startInstance                               controllers.Application.startInstance()
 POST   /stopInstance                                controllers.Application.stopInstance()
