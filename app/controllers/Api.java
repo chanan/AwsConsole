@@ -1,8 +1,12 @@
 package controllers;
 
+import static play.data.Form.form;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import models.CreateInstance;
 import models.InstanceViewModel;
 import models.LocalInstance;
 
@@ -10,14 +14,18 @@ import com.amazonaws.services.ec2.model.Instance;
 
 import akka.actor.TypedActor;
 import akka.actor.TypedProps;
+import play.Logger;
 import play.data.DynamicForm;
+import play.data.Form;
 import play.libs.Akka;
+import play.libs.F;
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import play.libs.F.Tuple;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import scala.concurrent.Future;
 import securesocial.core.java.SecureSocial;
 import services.Amazon;
 import services.AmazonImpl;
@@ -115,5 +123,48 @@ public class Api extends Controller {
     	localStore.changePowerSaveState(instanceId);
     	return noContent();
     }
-
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result images() {
+    	return convertFutureMapToResult(amazon.getImages());
+    }
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result keys() {
+    	return convertFutureMapToResult(amazon.getKeysMap());
+    }
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result securityGroups() {
+    	return convertFutureMapToResult(amazon.getSecurityGroupsMap());
+    }
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result types() {
+    	return ok(Json.toJson(CreateInstance.getInstanceTypes()));
+    }
+    
+    private static AsyncResult convertFutureMapToResult(Future<Map<String, String>> futureMap) {
+    	return async(
+    		Akka.asPromise(futureMap).map(
+    			new Function<Map<String, String>, Result>() {
+					@Override
+					public Result apply(Map<String, String> map) throws Throwable {
+						return ok(Json.toJson(map));
+					}
+    			}
+			)
+		);
+    }
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+	public static Result createInstance() {
+		final Form<CreateInstance> createInstanceForm = form(CreateInstance.class).bindFromRequest();
+		if(createInstanceForm.hasErrors()) {
+			return badRequest(createInstanceForm.errorsAsJson());
+		} else {
+			amazon.createInstance(createInstanceForm.get());
+			return noContent(); 
+		}
+	}
 }

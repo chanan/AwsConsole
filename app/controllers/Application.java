@@ -47,9 +47,9 @@ public class Application extends Controller {
 		list.add(Akka.asPromise(amazon.getSecurityGroupsMap()));
 		final F.Promise<List<Map<String, String>>> promise = F.Promise.sequence(list);
 		final CreateInstance defaults = new CreateInstance();
-		defaults.powerSaveMode = true;
-		defaults.type = InstanceType.T1Micro.toString();
-		defaults.key = "DevOps";
+		defaults.setPowerSaveMode(true);
+		defaults.setType(InstanceType.T1Micro.toString());
+		defaults.setKey("DevOps");
 		final Form<CreateInstance> createInstanceForm = form(CreateInstance.class).fill(defaults);
 		final Map<String, String> types = CreateInstance.getInstanceTypes();
 		return async(promise.map(

@@ -9,16 +9,16 @@ import play.data.validation.Constraints.Required;
 
 public class CreateInstance {
 	@Required
-	public String name;
+	private String name;
 	@Required
-	public String imageId;
+	private String imageId;
 	@Required
-	public String key;
+	private String key;
 	@Required
-	public String group;
+	private String group;
 	@Required
-	public String type;
-	public boolean powerSaveMode;
+	private String type;
+	private boolean powerSaveMode;
 	
 	
 	public static Map<String, String> getInstanceTypes() {
@@ -29,5 +29,65 @@ public class CreateInstance {
 		map.put(InstanceType.M1Large.toString(), InstanceType.M1Large.toString());
 		map.put(InstanceType.M1Xlarge.toString(), InstanceType.M1Xlarge.toString());
 		return map;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getImageId() {
+		return imageId;
+	}
+
+
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
+	}
+
+
+	public String getKey() {
+		return key;
+	}
+
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+
+	public String getGroup() {
+		return group;
+	}
+
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+	public boolean isPowerSaveMode() {
+		return powerSaveMode;
+	}
+
+
+	public void setPowerSaveMode(boolean powerSaveMode) {
+		this.powerSaveMode = powerSaveMode;
 	}
 }

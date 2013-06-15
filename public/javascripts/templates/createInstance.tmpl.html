@@ -1,0 +1,77 @@
+<div class="row">
+	<div class="span12">
+		<div id="instanceAlertSuccess" class="alert alert-success hide">
+  			<button type="button" class="close" data-dismiss="alert">&times;</button>
+ 			<h4>Success!</h4>
+ 			The new instance has been created.
+		</div>
+		<div id="instanceAlertError" class="alert alert-error hide">
+  			<button type="button" class="close" data-dismiss="alert">&times;</button>
+ 			<h4>Failure!</h4>
+ 			The new instance has <strong>not</strong> been created.
+		</div>
+		<form id="createInstanceForm" action="/doCreateInstance" method="POST" class="form-horizontal">
+			<fieldset>
+				<div class="control-group" id="ImageId_field">
+					<label class="control-label" for="ImageId">Image</label>
+					<div class="controls">
+						<select id="ImageId" name="ImageId" data-bind="options: images, optionsText: 'value', optionsValue: 'key', optionsCaption: '-- Choose an image --'" required></select>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="control-group" id="Name_field">
+					<label class="control-label" for="Name">New instance Name</label>
+					<div class="controls">
+						<input type="text" id="Name" name="Name" class="input-xlarge" data-bind="value: newInstanceName" required> 
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="control-group" id="Type_field">
+					<label class="control-label" for="Type">Type</label>
+					<div class="controls">
+						<select id="Type" name="Type" data-bind="value: type, options: types, optionsText: 'value', optionsValue: 'key', optionsCaption: '-- Choose a type --'" required></select>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="control-group" id="Group_field">
+					<label class="control-label" for="Group">Firewall</label>
+					<div class="controls">
+						<select id="Group" name="Group" data-bind="value: group, options: securityGroups, optionsText: 'value', optionsValue: 'key', optionsCaption: '-- Choose a firewall --'" required></select> 
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="control-group" id="Key_field">
+					<label class="control-label" for="Key">SSH Key</label>
+					<div class="controls">
+						<select id="Key" name="Key" data-bind="value: key, options: keys, optionsText: 'value', optionsValue: 'key', optionsCaption: '-- Choose a key --'" required></select>
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="control-group" id="powerSaveMode_field">
+					<label class="control-label" for="powerSaveMode">Power SaveMode</label>
+					<div class="controls">
+						<input type="checkbox" id="powerSaveMode" name="powerSaveMode" data-bind="checked: powerSaveMode"> 
+						<span class="help-block"></span>
+					</div>
+				</div>
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary" data-bind="click: doCreateInstance">Create Instance</button>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="span12">
+		<h3>Notes</h3>
+		<ol>
+			<li>Choose firewall: <strong>Http-Default</strong> for http,https, and ssh open</li>
+			<li>Choose firewall: <strong>Datastax</strong> for Cassandra that is blocked other than to Http-Default</li>
+			<li>Make sure the firewall setting is correct. It cannot be changed later</li>
+			<li>Make sure you have the key that you choose. It cannot be changed later</li>
+			<li>Cassandra does <strong>not</strong> work on micro size. Use small for Dev and large at least for production</li>
+			<li>For Cassandra, change the 3 ips in /etc/cassandra/cassandra.yaml to point to the local ip address</li>
+			<li>For Play, setup the upstart conf file to start up the service</li>
+		</ol>
+	</div>
+</div>

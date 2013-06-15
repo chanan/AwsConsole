@@ -21,6 +21,12 @@ GET    /api/instances/:instanceId                   controllers.Api.instance(ins
 POST   /api/instances/:instanceId/start             controllers.Api.startInstance(instanceId)
 POST   /api/instances/:instanceId/stop              controllers.Api.stopInstance(instanceId)
 POST   /api/instances/:instanceId/changePowerSave   controllers.Api.changePowerSave(instanceId)
+POST	   /api/instances/new							controllers.Api.createInstance()
+
+GET	   /api/images									controllers.Api.images()
+GET    /api/keys								    controllers.Api.keys()
+GET    /api/securityGroups                          controllers.Api.securityGroups()
+GET	   /api/types								    controllers.Api.types()
 
 # Map static resources from the /public folder to the /assets URL path
 GET    /lib/require.js              				controllers.WebJarAssets.requirejs

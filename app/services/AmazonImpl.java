@@ -156,16 +156,16 @@ public class AmazonImpl implements Amazon {
 
 	@Override
 	public void createInstance(CreateInstance createInstance) {
-		final RunInstancesRequest request = new RunInstancesRequest(createInstance.imageId, 1, 1)
-			.withSecurityGroupIds(createInstance.group).withKeyName(createInstance.key)
-			.withInstanceType(createInstance.type);
+		final RunInstancesRequest request = new RunInstancesRequest(createInstance.getImageId(), 1, 1)
+			.withSecurityGroupIds(createInstance.getGroup()).withKeyName(createInstance.getKey())
+			.withInstanceType(createInstance.getType());
 		final RunInstancesResult result = client.runInstances(request);
 		final Instance instance = result.getReservation().getInstances().get(0);
-		final Tag tag = new Tag("Name", createInstance.name);
+		final Tag tag = new Tag("Name", createInstance.getName());
 		final CreateTagsRequest tagsRequest = new CreateTagsRequest()
 			.withResources(instance.getInstanceId()).withTags(tag);
 		client.createTags(tagsRequest);
-		if(createInstance.powerSaveMode) {
+		if(createInstance.isPowerSaveMode()) {
 			LocalInstance localInstance = new LocalInstance(instance.getInstanceId());
 			localInstance.powerSave = true;
 			localInstance.save();

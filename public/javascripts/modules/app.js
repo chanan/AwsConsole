@@ -2,6 +2,7 @@ define(['webjars!knockout.js', 'webjars!jquery.js'], function(ko) {
     return function() {
 		var self = this;
 		self.currentModule = ko.observable('instances');
+		self.currentModuleName = ko.observable('instances');
 		
 		var request;
 		
@@ -24,8 +25,14 @@ define(['webjars!knockout.js', 'webjars!jquery.js'], function(ko) {
 		};
 		
 		self.doNavigate = function(module) {
+			self.currentModuleName(module);
 			self.currentModule(camelize(module));
-		}
+		};
+		
+		self.loginKeypress = function(data, event) {
+			if(event.keyCode == 13) self.doLogin();
+			return true;
+		};
 		
 		$.ajaxSetup({
 			cache: false,

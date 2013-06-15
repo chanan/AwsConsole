@@ -48,6 +48,7 @@ define(['webjars!knockout.js', 'webjars!jquery.js', 'webjars!bootswatch.js'], fu
 	}
 	
 	return function() {
+		var self = this;
 		self.instances = ko.observableArray([]);
 		
 		//ko.track(this);
