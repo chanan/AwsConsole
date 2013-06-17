@@ -21,8 +21,9 @@ GET    /api/instances/:instanceId                   controllers.Api.instance(ins
 POST   /api/instances/:instanceId/start             controllers.Api.startInstance(instanceId)
 POST   /api/instances/:instanceId/stop              controllers.Api.stopInstance(instanceId)
 POST   /api/instances/:instanceId/changePowerSave   controllers.Api.changePowerSave(instanceId)
-POST	   /api/instances/new							controllers.Api.createInstance()
-
+PUT    /api/instances/new							controllers.Api.createInstance()
+GET	   /api/users									controllers.Api.users()
+POST   /api/users/invite/:email						controllers.Api.invite(email)
 GET	   /api/images									controllers.Api.images()
 GET    /api/keys								    controllers.Api.keys()
 GET    /api/securityGroups                          controllers.Api.securityGroups()

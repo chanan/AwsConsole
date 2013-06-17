@@ -9,16 +9,10 @@ import java.util.Map;
 import models.CreateInstance;
 import models.InstanceViewModel;
 import models.LocalInstance;
-
-import com.amazonaws.services.ec2.model.Instance;
-
-import akka.actor.TypedActor;
-import akka.actor.TypedProps;
+import models.LocalUser;
 import play.Logger;
-import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Akka;
-import play.libs.F;
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import play.libs.F.Tuple;
@@ -26,11 +20,17 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import scala.concurrent.Future;
+import securesocial.core.UserServicePlugin;
 import securesocial.core.java.SecureSocial;
+import securesocial.core.providers.UsernamePasswordProvider;
 import services.Amazon;
 import services.AmazonImpl;
 import services.LocalStore;
 import services.LocalStoreImpl;
+import akka.actor.TypedActor;
+import akka.actor.TypedProps;
+
+import com.amazonaws.services.ec2.model.Instance;
 
 public class Api extends Controller {
 	private final static Amazon amazon = TypedActor.get(Akka.system()).typedActorOf(new TypedProps<AmazonImpl>(Amazon.class, AmazonImpl.class));
@@ -167,4 +167,18 @@ public class Api extends Controller {
 			return noContent(); 
 		}
 	}
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+	public static Result users() {
+		List<LocalUser> list = LocalUser.find.all();
+		return ok(Json.toJson(list));
+	}
+    
+    @SecureSocial.SecuredAction(ajaxCall = true)
+    public static Result invite(String email) {
+    	/*UserService.
+    	UserService.findByEmailAndProvider(email, UsernamePasswordProvider.UsernamePassword());
+    	Logger.info(email);*/
+    	return noContent();
+    }
 }

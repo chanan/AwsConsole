@@ -1,1 +1,47 @@
-<h1>Users</h1>
+<div class="row">
+	<div class="span12">
+		<div id="inviteAlertSuccess" class="alert alert-success hide">
+  			<button type="button" class="close" data-dismiss="alert">&times;</button>
+ 			<h4>Success!</h4>
+ 			The invite has been sent.
+		</div>
+		<div id="inviteAlertError" class="alert alert-error hide">
+  			<button type="button" class="close" data-dismiss="alert">&times;</button>
+ 			<h4>Failure!</h4>
+ 			The invite <strong>could not</strong> be sent.
+		</div>
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody data-bind="foreach: users()">
+				<tr>
+					<td data-bind="text: firstName"></td>
+					<td data-bind="text: lastName"></td>
+					<td data-bind="text: email"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row">
+	<div class="span12">
+		<form id="inviteForm" action="/signup" class="form-horizontal" autocomplete="off" method="post">
+        	<fieldset>
+				<dl class=" " id="email_field">
+    				<dt><label for="email">Email</label></dt>
+    				<dd>
+    					<input type="email" id="email" name="email" class="input-xlarge" data-bind="value: newEmail">
+   					</dd>
+				</dl>
+				<div class="form-actions">
+                	<button type="submit" class="btn btn-primary" data-bind="click: submitInvite">Send Invite</button>
+	            </div>
+     		</fieldset>
+   		</form>
+	</div>
+</div>

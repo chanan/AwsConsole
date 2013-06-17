@@ -1,0 +1,27 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@title</title>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootswatch/2.3.1/united/bootstrap.min.css"))'>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("bootswatch/2.3.1/default/bootstrap-responsive.min.css"))'>
+        <link rel='stylesheet' href='@routes.WebJarAssets.at(WebJarAssets.locate("font-awesome/3.1.1/css/font-awesome.min.css"))'>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+    </head>
+    <body class="preview">
+ 		<div class="navbar navbar-fixed-top">
+   			<div class="navbar-inner">
+     			<div class="container">
+       				<a class="brand" href="/">AWS Console</a>		    
+     			</div>
+   			</div>
+ 		</div>
+        @content
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("jquery.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("/bootswatch/2.3.1/js/bootstrap.min.js"))'></script>
+        <script type='text/javascript' src='@routes.WebJarAssets.at(WebJarAssets.locate("js/bootswatch.js"))'></script>
+    </body>
+</html>

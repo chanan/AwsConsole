@@ -3,6 +3,8 @@ package models;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import play.db.ebean.Model;
 
 
@@ -14,6 +16,7 @@ public class LocalUser extends Model  {
 	@Id
 	public String id;
 
+	@JsonIgnore
 	public String provider;
 
 	public String firstName;
@@ -22,6 +25,7 @@ public class LocalUser extends Model  {
 
 	public String email;
 
+	@JsonIgnore
 	public String password;
 	
 	public static Finder<String, LocalUser> find = new Finder<String, LocalUser>(

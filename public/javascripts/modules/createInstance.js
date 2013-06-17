@@ -40,15 +40,16 @@ define(['webjars!knockout.js', 'listItem'], function(ko, listItem) {
         }
         
         self.doCreateInstance = function() {
+        	$('#instanceAlertSuccess').hide();
+        	$('#instanceAlertError').hide();
         	$.ajax({
         		url: '/api/instances/new',
-        		type: 'POST',
+        		type: 'PUT',
         		data: $('#createInstanceForm').serialize()
         	}).done(function(data) {
         		$('#instanceAlertSuccess').show();
         	}).fail(function(jqXHR, textStatus, errorThrown) {
         		$('#instanceAlertError').show();
-        		console.log(jqXHR.responseText);
         		var result = JSON.parse(jqXHR.responseText);
         		$.map(result, function(item, key) {
         			$('#' + capitaliseFirstLetter(key)).next().text(item);
