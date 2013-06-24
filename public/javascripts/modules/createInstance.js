@@ -1,6 +1,7 @@
-define(['webjars!knockout.js', 'listItem'], function(ko, listItem) {
+define(['webjars!knockout.js', 'listItem', '/routes.js'], function(ko, listItem) {
     return function() {
         var self = this;
+        self.apiController = routes.controllers.Api;
         
         self.images = ko.observableArray([]);
         self.keys = ko.observableArray([]);
@@ -14,39 +15,38 @@ define(['webjars!knockout.js', 'listItem'], function(ko, listItem) {
         self.group = ko.observable('HTTP-Default');
         self.newInstanceName = ko.observable();
         
-        getListItems('/api/types', function(mappedItems) {
+        getListItems(self.apiController.types(), function(mappedItems) {
         	self.types(mappedItems);
+        	self.type('t1.micro');
         });
         
-        getListItems('/api/images', function(mappedItems) {
+        getListItems(self.apiController.images(), function(mappedItems) {
         	self.images(mappedItems);
         });
         
-        getListItems('/api/keys', function(mappedItems) {
+        getListItems(self.apiController.keys(), function(mappedItems) {
         	self.keys(mappedItems);
+        	self.key('DevOps');
         });
         
-        getListItems('/api/securityGroups', function(mappedItems) {
+        getListItems(self.apiController.securityGroups(), function(mappedItems) {
         	self.securityGroups(mappedItems);
+        	self.group('HTTP-Default');
         });
        
         function getListItems(url, callback) {
-        	$.getJSON(url, function(data) {
-				var mappedItems = $.map(data, function(item, key) {
+        	$.ajax(url).done(function(data) {
+        		var mappedItems = $.map(data, function(item, key) {
 					return new listItem(key, item);
 				});
 				callback(mappedItems);
-			});
+        	});
         }
         
         self.doCreateInstance = function() {
         	$('#instanceAlertSuccess').hide();
         	$('#instanceAlertError').hide();
-        	$.ajax({
-        		url: '/api/instances/new',
-        		type: 'PUT',
-        		data: $('#createInstanceForm').serialize()
-        	}).done(function(data) {
+        	$.ajax($.extend(self.apiController.createInstance(), {data: $('#createInstanceForm').serialize() })).done(function(data) {
         		$('#instanceAlertSuccess').show();
         	}).fail(function(jqXHR, textStatus, errorThrown) {
         		$('#instanceAlertError').show();

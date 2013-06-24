@@ -1,6 +1,7 @@
-define(['webjars!knockout.js', 'webjars!jquery.js', 'webjars!bootswatch.js'], function(ko) {
+define(['webjars!knockout.js', 'webjars!jquery.js', 'webjars!bootswatch.js', '/routes.js'], function(ko) {
 	function Instance(item) {
 		var self = this;
+		self.apiController = routes.controllers.Api;
 		self.instanceId = item.instanceId;
 		self.name = item.name;
 		self.type = item.type;
@@ -14,11 +15,11 @@ define(['webjars!knockout.js', 'webjars!jquery.js', 'webjars!bootswatch.js'], fu
 		self.disallowPowerSave = ko.observable(item.disallowPowerSave);
 		self.timeout = '';
 		
-		self.start = function() {
-			$.post('/api/instances/' + self.instanceId + '/start');
+		self.start = function() {;
+			self.apiController.startInstance(self.instanceId).ajax();
 			self.state('pending');
 			self.timeout = window.setInterval(function() {
-				$.getJSON('/api/instances/' + self.instanceId, function(item) {
+				self.apiController.instance(self.instanceId).ajax().done(function(item) {
 					self.state(item.state);
 					self.dns(item.dns);
 					self.lastLaunchTime(item.lastLaunchTime);
@@ -28,10 +29,10 @@ define(['webjars!knockout.js', 'webjars!jquery.js', 'webjars!bootswatch.js'], fu
 		};
 		
 		self.stop = function() {
-			$.post('/api/instances/' + self.instanceId +'/stop');
+			self.apiController.stopInstance(self.instanceId).ajax();
 			self.state('stopping');
 			self.timeout = window.setInterval(function() {
-				$.getJSON('/api/instances/' + self.instanceId, function(item) {
+				self.apiController.instance(self.instanceId).ajax().done(function(item) {
 					self.state(item.state);
 					self.dns(item.dns);
 					if(item.state == 'stopped') window.clearInterval(self.timeout);
@@ -40,23 +41,20 @@ define(['webjars!knockout.js', 'webjars!jquery.js', 'webjars!bootswatch.js'], fu
 		};
 		
 		self.checkPowerSave = function() {
-			$.post('/api/instances/' + self.instanceId + '/changePowerSave');
+			self.apiController.changePowerSave(self.instanceId).ajax();
 			return true;
 		};
-		
-		//ko.track(this);
 	}
 	
 	return function() {
 		var self = this;
+		self.apiController = routes.controllers.Api;
 		self.instances = ko.observableArray([]);
-		
-		//ko.track(this);
 		
 		getInstances();
 		
 		function getInstances() {
-			$.getJSON('/api/instances', function(data) {
+			self.apiController.instances().ajax().done(function(data){
 				var mappedInstances = $.map(data, function(item) { 
 					return new Instance(item); 
 				});

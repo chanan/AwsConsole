@@ -1,4 +1,4 @@
-define(['webjars!knockout.js'], function(ko) {
+define(['webjars!knockout.js', '/routes.js'], function(ko) {
     function User(item) {
     	var self = this;
     	self.firstName = item.firstName;
@@ -8,6 +8,7 @@ define(['webjars!knockout.js'], function(ko) {
 	
 	return function() {
 		var self = this;
+		self.apiController = routes.controllers.Api;
 		self.users = ko.observableArray([]);
 		self.newEmail = ko.observable();
 		
@@ -34,7 +35,7 @@ define(['webjars!knockout.js'], function(ko) {
 		getUsers();
 		
 		function getUsers() {
-			$.getJSON('/api/users', function(data) {
+			self.apiController.users().ajax().done(function(data) {
 				var mappedUsers = $.map(data, function(item) { 
 					return new User(item); 
 				});

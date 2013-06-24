@@ -19,7 +19,9 @@ define(['webjars!knockout.js', 'webjars!jquery.js'], function(ko) {
 		
 		self.doLogin = function() {
 			$.post('/authenticate/userpass', $('#loginForm').serialize(), function(data, textStatus, jqXHR) {
-				$.ajax(request);
+				var temp = self.currentModule();
+				self.currentModule(null);
+				self.currentModule(temp);
 				$('#loginModal').modal('hide');
 			});
 		};

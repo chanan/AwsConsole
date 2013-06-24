@@ -5,6 +5,7 @@
 # Application
 GET    /                                            controllers.Application.index()
 GET    /healthCheck                                 controllers.Application.healthCheck()
+GET    /routes.js                  					controllers.Application.router
 
 # Json API
 
