@@ -1,8 +1,8 @@
 define(['webjars!knockout.js', 'webjars!jquery.js'], function(ko) {
     return function() {
 		var self = this;
-		self.currentModule = ko.observable('instances');
-		self.currentModuleName = ko.observable('instances');
+		self.currentModule = ko.observable();
+		self.currentModuleName = ko.observable();
 		
 		var request;
 		

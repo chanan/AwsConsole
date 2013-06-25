@@ -1,3 +1,3 @@
 <ul class="nav" data-bind="foreach: modules">
-  	<li data-bind="css: { active: $data == $root.currentModuleName() }"><a href="#" data-bind="text: $data, click: $root.doNavigate"></a></li>
+  	<li data-bind="css: { active: $data == $root.currentModuleName() }"><a href="#" data-bind="text: name, attr: { href: link }"></a></li>
 </ul>
